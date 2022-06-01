@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { useDispatch, useSelector } from "react-redux";
 import { addQuote } from "./quotesSlice";
 
 function QuoteForm() {
   const [formData, setFormData] = useState({
     // set up a controlled form with internal state
     // look at the form to determine what keys need to go here
+
+    content: "",
+    author: ""
+
+
   });
+
+  const dispatch = useDispatch();
 
   function handleChange(event) {
     // Handle Updating Component State
@@ -17,6 +25,14 @@ function QuoteForm() {
     // Create quote object from state
     // Pass quote object to action creator
     // Update component state to return to default state
+    event.preventDefault(); 
+    let quoteObj =  formData; 
+    dispatch(addQuote(quoteObj))
+   // addQuote(quoteObj); 
+    setFormData({  
+      content: "",
+      author: ""
+    })
   }
 
   return (
@@ -25,7 +41,7 @@ function QuoteForm() {
         <div className="col-md-8 col-md-offset-2">
           <div className="panel panel-default">
             <div className="panel-body">
-              <form className="form-horizontal">
+              <form className="form-horizontal" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="content" className="col-md-4 control-label">
                     Quote
@@ -35,6 +51,8 @@ function QuoteForm() {
                       className="form-control"
                       id="content"
                       value={formData.content}
+                      name="content"
+                      onChange={ e => setFormData({...formData, content: e.target.value})}
                     />
                   </div>
                 </div>
@@ -47,7 +65,9 @@ function QuoteForm() {
                       className="form-control"
                       type="text"
                       id="author"
+                      name="author"
                       value={formData.author}
+                      onChange={e => setFormData({...formData, author: e.target.value})}
                     />
                   </div>
                 </div>
@@ -59,6 +79,7 @@ function QuoteForm() {
                   </div>
                 </div>
               </form>
+
             </div>
           </div>
         </div>
